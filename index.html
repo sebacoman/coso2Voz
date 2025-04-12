@@ -2,54 +2,34 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Asistente Inteligente</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        padding: 50px;
-        background-color: #f2f2f2;
-      }
-      .status {
-        font-size: 1.5rem;
-        margin-top: 20px;
-      }
-      .asistente {
-        background-color: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        display: inline-block;
-      }
-      button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border: none;
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-    </style>
+    <title>Test Voz</title>
   </head>
   <body>
-    <div class="asistente">
-      <h1>Hola Seba 👋</h1>
-      <p>Tu asistente inteligente está listo para ayudarte.</p>
-      <div class="status" id="estado">🎙️ Esperando que hables...</div>
-      <button onclick="iniciarReconocimiento()">Hablar con el asistente</button>
-    </div>
+    <h1>🎤 Prueba de voz</h1>
+    <p id="estado">Hacé clic y hablá</p>
+    <button onclick="escuchar()">Hablar</button>
 
     <script>
       const estado = document.getElementById("estado");
       const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
       reconocimiento.lang = "es-AR";
       reconocimiento.interimResults = false;
       reconocimiento.maxAlternatives = 1;
 
-      function iniciarReconocimiento() {
-        estado.textContent = "🎧 Escuchando
+      function escuchar() {
+        estado.textContent = "🎧 Escuchando...";
+        reconocimiento.start();
+      }
 
+      reconocimiento.onresult = function(event) {
+        const texto = event.results[0][0].transcript;
+        estado.textContent = `🗣️ Dijiste: "${texto}"`;
+      };
 
+      reconocimiento.onerror = function(event) {
+        estado.textContent = `❌ Error: ${event.error}`;
+      };
+    </script>
+  </body>
+</html>
