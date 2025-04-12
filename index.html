@@ -22,13 +22,68 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         display: inline-block;
       }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <div class="asistente">
       <h1>Hola Seba 👋</h1>
       <p>Tu asistente inteligente está listo para ayudarte.</p>
-      <div class="status">🔌 Esperando conexión con sensores...</div>
+      <div class="status" id="estado">🎙️ Esperando que hables...</div>
+      <button onclick="iniciarReconocimiento()">Hablar con el asistente</button>
     </div>
+
+    <script>
+      const estado = document.getElementById("estado");
+      const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      reconocimiento.lang = "es-AR";
+      reconocimiento.interimResults = false;
+      reconocimiento.maxAlternatives = 1;
+
+      function iniciarReconocimiento() {
+        estado.textContent = "🎧 Escuchando...";
+        reconocimiento.start();
+      }
+
+      reconocimiento.onresult = function(event) {
+        const texto = event.results[0][0].transcript;
+        estado.textContent = `🗣️ Dijiste: "${texto}"`;
+        responder(texto);
+      };
+
+      reconocimiento.onerror = function(event) {
+        estado.textContent = `❌ Error: ${event.error}`;
+      };
+
+      function responder(mensaje) {
+        let respuesta = "No entendí, ¿podés repetir?";
+
+        if (mensaje.includes("cómo estás")) {
+          respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
+        } else if (mensaje.includes("hora")) {
+          const hora = new Date().toLocaleTimeString();
+          respuesta = `Son las ${hora}`;
+        } else if (mensaje.includes("llamar")) {
+          respuesta = "Si necesitás ayuda, puedo avisar a alguien de confianza.";
+        } else if (mensaje.includes("nombre")) {
+          respuesta = "Soy tu asistente inteligente, Seba.";
+        }
+
+        const synth = window.speechSynthesis;
+        const voz = new SpeechSynthesisUtterance(respuesta);
+        voz.lang = "es-AR";
+        synth.speak(voz);
+      }
+    </script>
   </body>
 </html>
+
