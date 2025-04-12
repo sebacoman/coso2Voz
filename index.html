@@ -55,7 +55,7 @@
       }
 
       reconocimiento.onresult = function(event) {
-        const texto = event.results[0][0].transcript;
+        const texto = event.results[0][0].transcript.toLowerCase();
         estado.textContent = `🗣️ Dijiste: "${texto}"`;
         responder(texto);
       };
@@ -67,6 +67,7 @@
       function responder(mensaje) {
         let respuesta = "No entendí, ¿podés repetir?";
 
+        // Hacemos que las palabras sean más fáciles de detectar
         if (mensaje.includes("hora")) {
           const hora = new Date().toLocaleTimeString();
           respuesta = `Son las ${hora}`;
@@ -78,6 +79,7 @@
           respuesta = "Si necesitas ayuda, puedo avisar a alguien de confianza.";
         }
 
+        // Si no se detectó ninguna coincidencia
         const synth = window.speechSynthesis;
         const voz = new SpeechSynthesisUtterance(respuesta);
         voz.lang = "es-AR";
@@ -87,7 +89,4 @@
   </body>
 </html>
 
-    </script>
-  </body>
-</html>
 
