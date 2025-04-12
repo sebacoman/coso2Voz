@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <!-- Todo el head se mantiene igual -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Asistente Inteligente</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding: 50px;
+        background-color: #f2f2f2;
+      }
+      .status {
+        font-size: 1.5rem;
+        margin-top: 20px;
+      }
+      .asistente {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <div class="asistente">
-      <!-- ... Contenido HTML igual ... -->
+      <h1>Hola Seba 👋</h1>
+      <p>Tu asistente inteligente está listo para ayudarte.</p>
+      <div class="status" id="estado">🎙️ Esperando que hables...</div>
+      <button onclick="iniciarReconocimiento()">Hablar con el asistente</button>
     </div>
 
     <script>
@@ -16,41 +50,6 @@
       reconocimiento.maxAlternatives = 1;
 
       function iniciarReconocimiento() {
-        estado.textContent = "🎧 Escuchando...";
-        reconocimiento.start();
-      }
-
-      reconocimiento.onresult = function(event) {
-        const texto = event.results[0][0].transcript.toLowerCase();
-        estado.textContent = `🗣️ Dijiste: "${texto}"`;
-        responder(texto);
-      };
-
-      reconocimiento.onerror = function(event) {
-        estado.textContent = `❌ Error: ${event.error}`;
-      };
-
-      function responder(mensaje) {    // <-- ¡Error de sintaxis corregido aquí!
-        let respuesta = "No entendí, ¿podés repetir?";
-
-        if (/como estas|como te va|todo bien|estas bien/.test(mensaje)) {
-          respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
-        } else if (/hora|que hora es|tenes la hora/.test(mensaje)) {
-          const hora = new Date().toLocaleTimeString();
-          respuesta = `Son las ${hora}`;
-        } else if (/llamar|ayuda|emergencia/.test(mensaje)) {
-          respuesta = "Si necesitás ayuda, puedo avisar a alguien de confianza.";
-        } else if (/nombre|quien sos|como te llamas/.test(mensaje)) {
-          respuesta = "Soy tu asistente inteligente, Seba.";
-        }
-
-        const synth = window.speechSynthesis;
-        const voz = new SpeechSynthesisUtterance(respuesta);
-        voz.lang = "es-AR";
-        synth.speak(voz);
-      }  // <-- Solo debe cerrarse aquí la función responder
-    </script>
-  </body>
-</html>
+        estado.textContent = "🎧 Escuchando
 
 
