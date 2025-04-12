@@ -1,30 +1,125 @@
-<script>
-  // ... (todo el código anterior se mantiene igual hasta reconocimiento.onerror)
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asistente Inteligente</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 30px;
+      text-align: center;
+    }
+    .asistente {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .chat {
+      text-align: left;
+      margin-top: 30px;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .mensaje {
+      margin-bottom: 15px;
+    }
+    .usuario {
+      font-weight: bold;
+      color: #333;
+    }
+    .ia {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="asistente">
+    <h1>Hola Seba 👋</h1>
+    <p>Tu asistente inteligente está listo para ayudarte.</p>
+    <div id="estado">🎙️ Esperando que hables...</div>
+    <button onclick="iniciarReconocimiento()">Hablar con el asistente</button>
+    <div class="chat" id="chat"></div>
+  </div>
 
-  reconocimiento.onresult = function(event) {
-    const texto = event.results[0][0].transcript.toLowerCase();
-    estado.textContent = "🎙️ Esperando que hables...";
-    agregarAlChat("🧍", texto);
-    responder(texto);
-    reconocimiento.stop();  // ← Corregido: Detiene el micrófono
-  };
+  <script>
+    const estado = document.getElementById("estado");
+    const chat = document.getElementById("chat");
+    const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    reconocimiento.lang = "es-AR";
+    reconocimiento.interimResults = false;
+    reconocimiento.maxAlternatives = 1;
 
-  reconocimiento.onerror = function(event) {
-    estado.textContent = `❌ Error: ${event.error}`;
-    reconocimiento.stop();  // ← Corregido: Detiene el micrófono en errores
-  };
+    function iniciarReconocimiento() {
+      reconocimiento.abort(); // Evita múltiples activaciones
+      estado.textContent = "🎧 Escuchando...";
+      reconocimiento.start();
+    }
 
-  reconocimiento.onsoundend = function() {
-    reconocimiento.stop();  // ← Nuevo: Maneja el final del audio
-  };
+    reconocimiento.onresult = function(event) {
+      const texto = event.results[0][0].transcript.toLowerCase();
+      estado.textContent = "🎙️ Esperando que hables...";
+      agregarAlChat("🧍", texto);
+      responder(texto);
+      reconocimiento.stop();
+    };
 
-  function iniciarReconocimiento() {
-    reconocimiento.abort();  // ← Nuevo: Evita múltiples activaciones
-    estado.textContent = "🎧 Escuchando...";
-    reconocimiento.start();
-  }
+    reconocimiento.onerror = function(event) {
+      estado.textContent = `❌ Error: ${event.error}`;
+      reconocimiento.stop();
+    };
 
-  // ... (el resto del código se mantiene igual)
-</script>
+    reconocimiento.onsoundend = function() {
+      reconocimiento.stop();
+    };
 
+    function responder(mensaje) {
+      let respuesta = "No entendí, ¿podés repetir?";
+
+      if (/como estas|como te va|todo bien|estas bien/.test(mensaje)) {
+        respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
+      } else if (/hora|que hora es|tenes la hora/.test(mensaje)) {
+        const hora = new Date().toLocaleTimeString();
+        respuesta = `Son las ${hora}`;
+      } else if (/llamar|ayuda|emergencia/.test(mensaje)) {
+        respuesta = "Si necesitás ayuda, puedo avisar a alguien de confianza.";
+      } else if (/nombre|quien sos|como te llamas/.test(mensaje)) {
+        respuesta = "Soy tu asistente inteligente, Seba.";
+      }
+
+      const synth = window.speechSynthesis;
+      const voz = new SpeechSynthesisUtterance(respuesta);
+      voz.lang = "es-AR";
+      synth.speak(voz);
+      agregarAlChat("🤖", respuesta);
+    }
+
+    function agregarAlChat(remitente, texto) {
+      const mensaje = document.createElement("div");
+      mensaje.classList.add("mensaje");
+      mensaje.innerHTML = `<span class="${remitente === '🧍' ? 'usuario' : 'ia'}">${remitente} ${texto}</span>`;
+      chat.appendChild(mensaje);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
 
