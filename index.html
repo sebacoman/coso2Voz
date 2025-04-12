@@ -2,10 +2,10 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Test Voz</title>
+    <title>Asistente Voz Básico</title>
   </head>
   <body>
-    <h1>🎤 Prueba de voz</h1>
+    <h1>🎤 Asistente de Voz</h1>
     <p id="estado">Hacé clic y hablá</p>
     <button onclick="escuchar()">Hablar</button>
 
@@ -23,13 +23,34 @@
       }
 
       reconocimiento.onresult = function(event) {
-        const texto = event.results[0][0].transcript;
+        const texto = event.results[0][0].transcript.toLowerCase();
         estado.textContent = `🗣️ Dijiste: "${texto}"`;
+        responder(texto);
       };
 
       reconocimiento.onerror = function(event) {
         estado.textContent = `❌ Error: ${event.error}`;
       };
+
+      function responder(mensaje) {
+        let respuesta = "No entendí, ¿podés repetir?";
+
+        if (mensaje.includes("cómo estás") || mensaje.includes("como estas")) {
+          respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
+        } else if (mensaje.includes("hora")) {
+          const hora = new Date().toLocaleTimeString();
+          respuesta = `Son las ${hora}`;
+        } else if (mensaje.includes("nombre")) {
+          respuesta = "Me llamo Asistente Inteligente. Estoy para ayudarte, Seba.";
+        } else if (mensaje.includes("llamar") || mensaje.includes("emergencia")) {
+          respuesta = "¿Querés que llame a alguien de confianza?";
+        }
+
+        const voz = new SpeechSynthesisUtterance(respuesta);
+        voz.lang = "es-AR";
+        speechSynthesis.speak(voz);
+      }
     </script>
   </body>
 </html>
+
