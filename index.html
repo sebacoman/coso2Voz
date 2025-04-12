@@ -65,25 +65,24 @@
       };
 
       function responder(mensaje) {
-        let respuesta = "No entendí, ¿podés repetir?";
+  let respuesta = "No entendí, ¿podés repetir?";
 
-        // Hacemos que las palabras sean más fáciles de detectar
-        if (mensaje.includes("hora")) {
-          const hora = new Date().toLocaleTimeString();
-          respuesta = `Son las ${hora}`;
-        } else if (mensaje.includes("cómo estás")) {
-          respuesta = "Estoy bien, gracias por preguntar. ¿Y vos?";
-        } else if (mensaje.includes("nombre")) {
-          respuesta = "Soy tu asistente inteligente, Seba.";
-        } else if (mensaje.includes("llamar")) {
-          respuesta = "Si necesitas ayuda, puedo avisar a alguien de confianza.";
-        }
+  if (/como estas|como te va|todo bien|estas bien/.test(mensaje)) {
+    respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
+  } else if (/hora|que hora es|tenes la hora/.test(mensaje)) {
+    const hora = new Date().toLocaleTimeString();
+    respuesta = `Son las ${hora}`;
+  } else if (/llamar|ayuda|emergencia/.test(mensaje)) {
+    respuesta = "Si necesitás ayuda, puedo avisar a alguien de confianza.";
+  } else if (/nombre|quien sos|como te llamas/.test(mensaje)) {
+    respuesta = "Soy tu asistente inteligente, Seba.";
+  }
 
-        // Si no se detectó ninguna coincidencia
-        const synth = window.speechSynthesis;
-        const voz = new SpeechSynthesisUtterance(respuesta);
-        voz.lang = "es-AR";
-        synth.speak(voz);
+  const synth = window.speechSynthesis;
+  const voz = new SpeechSynthesisUtterance(respuesta);
+  voz.lang = "es-AR";
+  synth.speak(voz);
+}
       }
     </script>
   </body>
