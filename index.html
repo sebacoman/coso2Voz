@@ -67,15 +67,9 @@
       function responder(mensaje) {
         let respuesta = "No entendí, ¿podés repetir?";
 
-        if (mensaje.includes("cómo estás")) {
-          respuesta = "Estoy muy bien, gracias por preguntar. ¿Y vos?";
-        } else if (mensaje.includes("hora")) {
+        if (mensaje.includes("hora")) {
           const hora = new Date().toLocaleTimeString();
           respuesta = `Son las ${hora}`;
-        } else if (mensaje.includes("llamar")) {
-          respuesta = "Si necesitás ayuda, puedo avisar a alguien de confianza.";
-        } else if (mensaje.includes("nombre")) {
-          respuesta = "Soy tu asistente inteligente, Seba.";
         }
 
         const synth = window.speechSynthesis;
